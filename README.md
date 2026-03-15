@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FoodLens - 食品配料表智能分析
 
-## Getting Started
+拍照识别食品配料表，AI 智能分析健康评分。
 
-First, run the development server:
+## 功能
+
+- **智能识别** — 拍照/上传配料表图片，AI 自动提取成分信息
+- **健康评分** — A/B/C/D 四级评分，综合添加剂、糖分、钠含量等指标
+- **多 AI 引擎** — 支持 Gemini、OpenAI、Claude、Mistral 一键切换
+- **扫描历史** — 记录每次扫描，支持按评分筛选
+- **排行榜** — 个人 Top 10 + 社区健康食品排名
+
+## 技术栈
+
+- **框架**: Next.js 15 (App Router) + TypeScript
+- **样式**: Tailwind CSS v4 + shadcn/ui
+- **AI**: Vercel AI SDK + 可插拔多 Provider
+- **数据库**: Supabase (PostgreSQL) + Prisma ORM
+- **认证**: Supabase Auth (Email/Password)
+- **部署**: Vercel
+
+## 快速开始
+
+### 1. 克隆项目
+
+```bash
+git clone https://github.com/your-username/FoodLens.git
+cd FoodLens
+npm install
+```
+
+### 2. 配置环境变量
+
+复制 `.env.example` 为 `.env`，填入你的配置：
+
+```bash
+cp .env.example .env
+```
+
+**必需配置：**
+- Supabase: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `DATABASE_URL`
+- AI (至少一个): `GOOGLE_GENERATIVE_AI_API_KEY` / `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` / `MISTRAL_API_KEY`
+
+### 3. 初始化数据库
+
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+### 4. 启动开发服务器
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+访问 http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 项目结构
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── (auth)/          # 登录/注册页面
+│   ├── (main)/          # 主功能页面 (scan, history, ranking)
+│   ├── api/             # API 路由
+│   └── page.tsx         # 首页
+├── components/
+│   ├── ui/              # shadcn/ui 组件
+│   ├── camera-capture   # 相机/上传组件
+│   ├── scan-result-card # 扫描结果卡片
+│   └── health-score-badge # 健康评分徽章
+├── lib/
+│   ├── ai.ts            # AI Provider 抽象层
+│   ├── prisma.ts        # Prisma 单例
+│   ├── schema.ts        # Zod 验证 schema
+│   └── supabase/        # Supabase 客户端
+└── middleware.ts         # 路由保护
+```
 
-## Learn More
+## AI Provider 配置
 
-To learn more about Next.js, take a look at the following resources:
+支持以下 AI 视觉模型，至少配置一个 API Key：
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Provider | 模型 | 环境变量 | 费用 |
+|----------|------|----------|------|
+| Google Gemini | gemini-2.5-flash | `GOOGLE_GENERATIVE_AI_API_KEY` | 免费 250次/天 |
+| OpenAI | gpt-4o-mini | `OPENAI_API_KEY` | $0.15/M tokens |
+| Anthropic | claude-3.5-haiku | `ANTHROPIC_API_KEY` | 新用户 $5 免费 |
+| Mistral | pixtral-large | `MISTRAL_API_KEY` | 免费实验层 |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+通过 `AI_PROVIDER` 环境变量设置默认 Provider，前端也支持手动切换。
 
-## Deploy on Vercel
+## 部署到 Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm i -g vercel
+vercel --prod
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+在 Vercel 项目设置中添加所有环境变量。
+
+## License
+
+MIT
