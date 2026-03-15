@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -29,11 +27,17 @@ export default async function HomePage() {
           </p>
           <div className="mt-8">
             {user ? (
-              <Link href="/scan" className={cn(buttonVariants({ size: "lg" }), "bg-white text-teal-600 hover:bg-white/90")}>
+              <Link
+                href="/scan"
+                className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 text-base font-medium text-teal-600 shadow-lg transition-colors hover:bg-white/90"
+              >
                 开始扫描
               </Link>
             ) : (
-              <Link href="/register" className={cn(buttonVariants({ size: "lg" }), "bg-white text-teal-600 hover:bg-white/90")}>
+              <Link
+                href="/register"
+                className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 text-base font-medium text-teal-600 shadow-lg transition-colors hover:bg-white/90"
+              >
                 免费注册
               </Link>
             )}

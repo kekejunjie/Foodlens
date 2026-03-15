@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { HistoryCard } from "@/components/history-card";
-import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const FILTER_VALUES = ["all", "A", "B", "C", "D"] as const;
@@ -44,7 +43,9 @@ export default async function HistoryPage({
         <h1 className="text-2xl font-semibold">扫描历史</h1>
         <div className="rounded-xl border border-dashed bg-muted/30 p-12 text-center">
           <p className="text-muted-foreground">还没有扫描记录，去扫描第一个产品吧！</p>
-          <Link href="/scan" className={cn(buttonVariants(), "mt-4")}>去扫描</Link>
+          <Link href="/scan" className="mt-4 inline-block rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+            去扫描
+          </Link>
         </div>
       </div>
     );
@@ -88,7 +89,9 @@ export default async function HistoryPage({
               : `没有 ${FILTER_LABELS[activeFilter]} 评分的记录`}
           </p>
           {activeFilter === "all" && (
-            <Link href="/scan" className={cn(buttonVariants(), "mt-4")}>去扫描</Link>
+            <Link href="/scan" className="mt-4 inline-block rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+              去扫描
+            </Link>
           )}
         </div>
       ) : (

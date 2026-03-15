@@ -1,7 +1,5 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
 import { UserDropdown } from "@/components/user-dropdown";
-import { cn } from "@/lib/utils";
 
 interface NavBarProps {
   user: { email: string } | null;
@@ -37,7 +35,7 @@ export function NavBar({ user }: NavBarProps) {
             {user ? (
               <UserDropdown email={user.email} />
             ) : (
-              <Link href="/login" className={cn(buttonVariants({ size: "sm" }))}>
+              <Link href="/login" className="inline-flex items-center justify-center rounded-lg bg-primary px-2.5 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90">
                 登录
               </Link>
             )}
