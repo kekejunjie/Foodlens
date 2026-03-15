@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  scans     Scan[]
+}
+
+model Scan {
+  id                String   @id @default(cuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
+  productId         String?
+  product           Product? @relation(fields: [productId], references: [id])
+  imageUrl          String?
+  rawResponse       Json?
+  healthScore       String   // A, B, C, D
+  sugar             Float?   // g/100g
+  sodium            Float?   // mg/100g
+  fat               Float?   // g/100g
+  protein           Float?   // g/100g
+  calories          Float?   // kcal/100g
+  additives         Json     @default("[]")
+  highRiskAdditives Json?
+  allergens         Json?
+  summary           String?
+  aiProvider        String?  // which AI provider was used
+  createdAt         DateTime @default(now())
+
+  @@index([userId])
+  @@index([productId])
+}
+
+model Product {
+  id        String   @id @default(cuid())
+  name      String
+  brand     String?
+  barcode   String?  @unique
+  category  String?
+  scans     Scan[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([category])
+}

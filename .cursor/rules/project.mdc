@@ -1,0 +1,45 @@
+---
+description: FoodLens project conventions and tech stack
+globs: ["**/*.ts", "**/*.tsx"]
+---
+
+# FoodLens Project Rules
+
+## Tech Stack
+- Next.js 15 (App Router) + TypeScript + Tailwind CSS v4 + shadcn/ui
+- Supabase (PostgreSQL + Auth + Storage)
+- Prisma ORM (client at `@/generated/prisma`)
+- Vercel AI SDK with pluggable providers (Google Gemini / OpenAI / Anthropic / Mistral)
+
+## Code Conventions
+- Use Chinese for user-facing strings (UI text, AI prompts, error messages)
+- Use English for code identifiers, comments, and technical documentation
+- Always use `@/` import alias for project files
+- Use `cn()` from `@/lib/utils` for className merging
+- Prefer Server Components by default; add `"use client"` only when needed
+- Use Zod for all API input/output validation
+
+## File Organization
+- `src/app/` — Pages and API routes (App Router)
+- `src/components/ui/` — shadcn/ui primitives (do not edit)
+- `src/components/` — Custom business components
+- `src/lib/` — Utilities, clients, shared logic
+- `src/hooks/` — Custom React hooks
+- `prisma/` — Database schema
+
+## Key Files
+- `src/lib/ai.ts` — AI provider abstraction (getModel, getAvailableProviders)
+- `src/lib/prisma.ts` — Prisma singleton client
+- `src/lib/supabase/client.ts` — Browser Supabase client
+- `src/lib/supabase/server.ts` — Server Supabase client
+- `src/lib/schema.ts` — Zod schemas for scan results
+
+## Database
+- Always use Prisma for DB operations, not raw Supabase queries
+- Supabase is used for Auth and Storage only
+- Run `npx prisma generate` after schema changes
+
+## AI Integration
+- Use `getModel()` from `@/lib/ai.ts` — never import provider SDKs directly in routes
+- Use `generateObject` with Zod schema for structured output
+- Store `aiProvider` field in Scan records for traceability

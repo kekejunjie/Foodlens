@@ -1,65 +1,72 @@
-import Image from "next/image";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
-export default function Home() {
+export default async function HomePage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen">
+      {/* Hero section with gradient */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-600 px-4 py-24 md:py-32">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAyNHYySDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-30" />
+        <div className="relative mx-auto max-w-4xl text-center">
+          <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow-lg md:text-5xl lg:text-6xl">
+            FoodLens
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mt-4 text-lg text-white/90 md:text-xl">
+            拍照识别配料表，AI 智能分析食品健康
           </p>
+          <div className="mt-8">
+            {user ? (
+              <Link href="/scan" className={cn(buttonVariants({ size: "lg" }), "bg-white text-teal-600 hover:bg-white/90")}>
+                开始扫描
+              </Link>
+            ) : (
+              <Link href="/register" className={cn(buttonVariants({ size: "lg" }), "bg-white text-teal-600 hover:bg-white/90")}>
+                免费注册
+              </Link>
+            )}
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Feature cards */}
+      <section className="mx-auto max-w-4xl px-4 py-16 md:py-24">
+        <div className="grid gap-6 md:grid-cols-3">
+          <Card className="border-0 bg-card shadow-lg transition-shadow hover:shadow-xl">
+            <CardHeader>
+              <div className="mb-2 text-3xl">🔍</div>
+              <CardTitle>智能识别</CardTitle>
+              <CardDescription>AI 识别配料表，精准提取成分信息</CardDescription>
+            </CardHeader>
+          </Card>
+          <Card className="border-0 bg-card shadow-lg transition-shadow hover:shadow-xl">
+            <CardHeader>
+              <div className="mb-2 text-3xl">📊</div>
+              <CardTitle>健康评分</CardTitle>
+              <CardDescription>A/B/C/D 评级，一目了然食品健康度</CardDescription>
+            </CardHeader>
+          </Card>
+          <Card className="border-0 bg-card shadow-lg transition-shadow hover:shadow-xl">
+            <CardHeader>
+              <div className="mb-2 text-3xl">🏆</div>
+              <CardTitle>排行对比</CardTitle>
+              <CardDescription>社区健康食品排名，选对更安心</CardDescription>
+            </CardHeader>
+          </Card>
         </div>
-      </main>
+      </section>
     </div>
   );
 }
