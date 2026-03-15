@@ -8,41 +8,50 @@ import { cn } from "@/lib/utils";
 const MAX_SIZE = 1024;
 const JPEG_QUALITY = 0.8;
 
-function compressImage(
-  file: File
-): Promise<string> {
+function readFileAsBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
-    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result.split(",")[1] ?? result);
+    };
+    reader.onerror = () => reject(new Error("文件读取失败"));
+    reader.readAsDataURL(file);
+  });
+}
+
+function compressImage(file: File): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new window.Image();
     const url = URL.createObjectURL(file);
 
     img.onload = () => {
       URL.revokeObjectURL(url);
 
       const { width, height } = img;
-      const isLandscape = width > height;
-      const targetWidth = isLandscape ? MAX_SIZE : (width / height) * MAX_SIZE;
-      const targetHeight = isLandscape ? (height / width) * MAX_SIZE : MAX_SIZE;
+      const scale = Math.min(1, MAX_SIZE / Math.max(width, height));
+      const targetWidth = Math.round(width * scale);
+      const targetHeight = Math.round(height * scale);
 
       const canvas = document.createElement("canvas");
-      canvas.width = Math.round(targetWidth);
-      canvas.height = Math.round(targetHeight);
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
 
       const ctx = canvas.getContext("2d");
       if (!ctx) {
-        reject(new Error("无法创建画布"));
+        readFileAsBase64(file).then(resolve);
         return;
       }
 
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
 
       const dataUrl = canvas.toDataURL("image/jpeg", JPEG_QUALITY);
-      const base64 = dataUrl.split(",")[1];
-      resolve(base64 ?? dataUrl);
+      resolve(dataUrl.split(",")[1] ?? dataUrl);
     };
 
     img.onerror = () => {
       URL.revokeObjectURL(url);
-      reject(new Error("图片加载失败"));
+      readFileAsBase64(file).then(resolve);
     };
 
     img.src = url;

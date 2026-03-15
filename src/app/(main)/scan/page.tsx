@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, ImageIcon } from "lucide-react";
 import { CameraCapture } from "@/components/camera-capture";
 import { ScanResultCard } from "@/components/scan-result-card";
 import { Button } from "@/components/ui/button";
@@ -15,8 +15,10 @@ export default function ScanPage() {
   const [imageBase64, setImageBase64] = useState<string | null>(null);
   const [provider, setProvider] = useState<string>("");
   const [providers, setProviders] = useState<string[]>([]);
+  const [providerLabels, setProviderLabels] = useState<Record<string, string>>({});
   const [defaultProvider, setDefaultProvider] = useState<string>("");
   const [state, setState] = useState<ScanState>("capture");
+  const [loadingDemo, setLoadingDemo] = useState(false);
   const [result, setResult] = useState<(ScanResult & { id?: string }) | null>(
     null
   );
@@ -27,6 +29,7 @@ export default function ScanPage() {
       .then((data) => {
         if (data.providers) {
           setProviders(data.providers);
+          if (data.labels) setProviderLabels(data.labels);
           setDefaultProvider(data.default ?? data.providers[0]);
           if (!provider && data.default) {
             setProvider(data.default);
@@ -49,6 +52,29 @@ export default function ScanPage() {
   const handleClear = () => {
     setImageBase64(null);
   };
+
+  const handleLoadDemo = useCallback(async () => {
+    setLoadingDemo(true);
+    try {
+      const res = await fetch("/demo/sample-label.jpg");
+      const blob = await res.blob();
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = reader.result as string;
+        setImageBase64(base64);
+        setLoadingDemo(false);
+        toast.success("已加载示例图片");
+      };
+      reader.onerror = () => {
+        setLoadingDemo(false);
+        toast.error("加载示例图片失败");
+      };
+      reader.readAsDataURL(blob);
+    } catch {
+      setLoadingDemo(false);
+      toast.error("加载示例图片失败");
+    }
+  }, []);
 
   const handleAnalyze = async () => {
     if (!imageBase64) {
@@ -118,6 +144,30 @@ export default function ScanPage() {
             disabled={false}
           />
 
+          {!imageBase64 && (
+            <div className="flex items-center gap-2">
+              <div className="h-px flex-1 bg-border" />
+              <span className="text-xs text-muted-foreground">或者</span>
+              <div className="h-px flex-1 bg-border" />
+            </div>
+          )}
+
+          {!imageBase64 && (
+            <Button
+              variant="outline"
+              onClick={handleLoadDemo}
+              disabled={loadingDemo}
+              className="w-full"
+            >
+              {loadingDemo ? (
+                <Loader2Icon className="mr-2 size-4 animate-spin" />
+              ) : (
+                <ImageIcon className="mr-2 size-4" />
+              )}
+              使用示例图片（矿泉水标签）
+            </Button>
+          )}
+
           {providers.length > 1 && (
             <div className="space-y-2">
               <Label>AI 分析引擎</Label>
@@ -128,7 +178,7 @@ export default function ScanPage() {
               >
                 {providers.map((p) => (
                   <option key={p} value={p}>
-                    {p}
+                    {providerLabels[p] ?? p}
                   </option>
                 ))}
               </select>
