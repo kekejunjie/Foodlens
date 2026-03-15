@@ -7,7 +7,6 @@ function getDashScope() {
   return createOpenAI({
     baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
     apiKey: process.env.DASHSCOPE_API_KEY,
-    compatibility: "compatible",
   });
 }
 
