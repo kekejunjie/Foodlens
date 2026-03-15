@@ -8,7 +8,7 @@ globs: ["**/*.ts", "**/*.tsx"]
 ## Tech Stack
 - Next.js 15 (App Router) + TypeScript + Tailwind CSS v4 + shadcn/ui
 - Supabase (PostgreSQL + Auth + Storage)
-- Prisma ORM (client at `@/generated/prisma`)
+- Prisma ORM (client at `@/generated/prisma/client`)
 - Vercel AI SDK with pluggable providers (Google Gemini / OpenAI / Anthropic / Mistral)
 
 ## Code Conventions

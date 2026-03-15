@@ -11,7 +11,7 @@ import {
 import { HealthScoreBadge } from "@/components/health-score-badge";
 import { formatRelativeTime } from "@/lib/date";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import type { Scan, Product } from "@/generated/prisma";
+import type { Scan, Product } from "@/generated/prisma/client";
 
 type ScanWithProduct = Scan & { product: Product | null };
 
