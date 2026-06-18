@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
-import { Loader2Icon, ImageIcon } from "lucide-react";
+import { ImageIcon, Loader2Icon, ScanLineIcon, SparklesIcon } from "lucide-react";
 import { CameraCapture } from "@/components/camera-capture";
 import { ScanResultCard } from "@/components/scan-result-card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import type { ScanResult } from "@/lib/schema";
 
@@ -117,27 +118,58 @@ export default function ScanPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">扫描配料表</h1>
-        <p className="mt-1 text-muted-foreground">
-          拍摄或上传食品配料表/营养成分表，AI 将为您分析健康评分
-        </p>
+      <div className="rounded-[2rem] border border-white/60 bg-card/80 p-6 shadow-xl shadow-emerald-950/5 backdrop-blur-xl dark:border-white/10 md:p-8">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+              <ScanLineIcon className="size-4" />
+              智能扫描
+            </div>
+            <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
+              扫描配料表
+            </h1>
+            <p className="mt-2 max-w-2xl text-muted-foreground">
+              拍摄或上传食品配料表/营养成分表，AI 将提取营养、添加剂和过敏原信息并生成健康评分。
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-center text-xs text-muted-foreground md:w-64">
+            {["上传", "分析", "评分"].map((step, index) => (
+              <div key={step} className="rounded-2xl bg-background/70 p-3">
+                <div className="mx-auto mb-1 flex size-7 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                  {index + 1}
+                </div>
+                {step}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {state === "result" && result ? (
         <div className="space-y-4">
           <ScanResultCard result={result} />
-          <Button onClick={handleScanNew} className="w-full">
+          <Button onClick={handleScanNew} className="h-11 w-full rounded-xl shadow-lg shadow-primary/20">
             扫描新产品
           </Button>
         </div>
       ) : state === "analyzing" ? (
-        <div className="flex flex-col items-center justify-center gap-4 py-16">
-          <Loader2Icon className="size-12 animate-spin text-primary" />
-          <p className="text-muted-foreground">AI 正在分析配料表...</p>
-        </div>
+        <Card className="border-white/60 bg-card/80 shadow-xl shadow-emerald-950/5 dark:border-white/10">
+          <CardContent className="flex flex-col items-center justify-center gap-4 px-6 py-20 text-center">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl" />
+              <Loader2Icon className="relative size-12 animate-spin text-primary" />
+            </div>
+            <div>
+              <p className="font-semibold">AI 正在分析配料表...</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                正在识别产品信息、营养数据和潜在风险。
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       ) : (
-        <div className="space-y-6">
+        <Card className="border-white/60 bg-card/80 shadow-xl shadow-emerald-950/5 backdrop-blur-xl dark:border-white/10">
+          <CardContent className="space-y-6 p-4 md:p-6">
           <CameraCapture
             onCapture={handleCapture}
             onClear={handleClear}
@@ -157,7 +189,7 @@ export default function ScanPage() {
               variant="outline"
               onClick={handleLoadDemo}
               disabled={loadingDemo}
-              className="w-full"
+              className="h-11 w-full rounded-xl border-primary/20 bg-background/70"
             >
               {loadingDemo ? (
                 <Loader2Icon className="mr-2 size-4 animate-spin" />
@@ -174,7 +206,7 @@ export default function ScanPage() {
               <select
                 value={provider}
                 onChange={(e) => setProvider(e.target.value)}
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                className="h-11 w-full rounded-xl border border-input bg-background/70 px-3 text-sm shadow-sm outline-none transition-colors focus:border-ring focus:ring-3 focus:ring-ring/30"
               >
                 {providers.map((p) => (
                   <option key={p} value={p}>
@@ -188,11 +220,13 @@ export default function ScanPage() {
           <Button
             onClick={handleAnalyze}
             disabled={!imageBase64}
-            className="w-full"
+            className="h-12 w-full rounded-xl text-base font-semibold shadow-lg shadow-primary/20"
           >
+            <SparklesIcon className="size-4" />
             开始分析
           </Button>
-        </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

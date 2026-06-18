@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { HealthScoreBadge } from "@/components/health-score-badge";
 import { cn } from "@/lib/utils";
+import { TrophyIcon, UsersIcon } from "lucide-react";
 
 type TabValue = "personal" | "community";
 
@@ -144,15 +145,27 @@ export default async function RankingPage({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">健康食品排行</h1>
+      <div className="rounded-[2rem] border border-white/60 bg-card/80 p-6 shadow-xl shadow-emerald-950/5 backdrop-blur-xl dark:border-white/10">
+        <div className="flex items-start gap-4">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <TrophyIcon className="size-6" />
+          </span>
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight">健康食品排行</h1>
+            <p className="mt-2 max-w-2xl text-muted-foreground">
+              根据你的扫描记录和社区数据，发现更值得购买的高分食品。
+            </p>
+          </div>
+        </div>
+      </div>
 
-      <div className="inline-flex items-center gap-1 rounded-lg bg-muted p-1">
+      <div className="inline-flex items-center gap-1 rounded-full border bg-card/75 p-1 shadow-sm">
         <Link
           href="/ranking"
           className={cn(
-            "rounded-md px-4 py-2 text-sm font-medium transition-colors",
+            "rounded-full px-4 py-2 text-sm font-medium transition-colors",
             activeTab === "personal"
-              ? "bg-background text-foreground shadow-sm"
+              ? "bg-primary text-primary-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
@@ -161,9 +174,9 @@ export default async function RankingPage({
         <Link
           href="/ranking?tab=community"
           className={cn(
-            "rounded-md px-4 py-2 text-sm font-medium transition-colors",
+            "rounded-full px-4 py-2 text-sm font-medium transition-colors",
             activeTab === "community"
-              ? "bg-background text-foreground shadow-sm"
+              ? "bg-primary text-primary-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
@@ -174,13 +187,13 @@ export default async function RankingPage({
       {activeTab === "personal" && (
         <div className="space-y-4">
           {personalRankings.length === 0 ? (
-            <div className="rounded-xl border border-dashed bg-muted/30 p-12 text-center">
+            <div className="rounded-[2rem] border border-dashed border-primary/30 bg-card/75 p-12 text-center shadow-xl shadow-emerald-950/5">
               <p className="text-muted-foreground">
                 还没有扫描记录，去扫描产品查看你的排行吧！
               </p>
               <Link
                 href="/scan"
-                className="mt-4 inline-block rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+                className="mt-4 inline-flex h-10 items-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90"
               >
                 去扫描
               </Link>
@@ -190,9 +203,14 @@ export default async function RankingPage({
               {personalRankings.map((item) => (
                 <div
                   key={item.rank}
-                  className="flex items-center gap-4 rounded-xl border bg-card p-4"
+                  className="flex items-center gap-4 rounded-2xl border border-white/60 bg-card/85 p-4 shadow-lg shadow-emerald-950/5 transition-all hover:-translate-y-0.5 hover:shadow-xl dark:border-white/10"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold">
+                  <span className={cn(
+                    "flex size-10 shrink-0 items-center justify-center rounded-2xl text-sm font-bold",
+                    item.rank <= 3
+                      ? "bg-accent text-accent-foreground"
+                      : "bg-muted text-muted-foreground"
+                  )}>
                     {item.rank}
                   </span>
                   <HealthScoreBadge score={item.healthScore} size="sm" />
@@ -217,13 +235,14 @@ export default async function RankingPage({
       {activeTab === "community" && (
         <div className="space-y-4">
           {communityRankings.length === 0 ? (
-            <div className="rounded-xl border border-dashed bg-muted/30 p-12 text-center">
+            <div className="rounded-[2rem] border border-dashed border-primary/30 bg-card/75 p-12 text-center shadow-xl shadow-emerald-950/5">
+              <UsersIcon className="mx-auto mb-3 size-8 text-primary" />
               <p className="text-muted-foreground">
                 社区暂无排行数据，快来扫描第一个产品吧！
               </p>
               <Link
                 href="/scan"
-                className="mt-4 inline-block rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+                className="mt-4 inline-flex h-10 items-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90"
               >
                 去扫描
               </Link>
@@ -233,9 +252,14 @@ export default async function RankingPage({
               {communityRankings.map((item) => (
                 <div
                   key={item.rank}
-                  className="flex items-center gap-4 rounded-xl border bg-card p-4"
+                  className="flex items-center gap-4 rounded-2xl border border-white/60 bg-card/85 p-4 shadow-lg shadow-emerald-950/5 transition-all hover:-translate-y-0.5 hover:shadow-xl dark:border-white/10"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold">
+                  <span className={cn(
+                    "flex size-10 shrink-0 items-center justify-center rounded-2xl text-sm font-bold",
+                    item.rank <= 3
+                      ? "bg-accent text-accent-foreground"
+                      : "bg-muted text-muted-foreground"
+                  )}>
                     {item.rank}
                   </span>
                   <HealthScoreBadge score={item.avgHealthScore} size="sm" />

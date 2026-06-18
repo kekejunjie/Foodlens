@@ -60,13 +60,13 @@ function LoginForm() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>登录</CardTitle>
-        <CardDescription>使用您的账号登录 FoodLens</CardDescription>
+    <Card className="border-white/60 bg-card/85 shadow-2xl shadow-emerald-950/10 backdrop-blur-xl dark:border-white/10">
+      <CardHeader className="p-6 text-center">
+        <CardTitle className="text-2xl font-semibold">欢迎回来</CardTitle>
+        <CardDescription>登录 FoodLens，继续查看你的食品健康记录</CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 px-6">
           <div className="space-y-2">
             <Label htmlFor="email">邮箱</Label>
             <Input
@@ -77,6 +77,7 @@ function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
               disabled={isLoading}
+              className="h-11 rounded-xl bg-background/70"
             />
           </div>
           <div className="space-y-2">
@@ -89,11 +90,12 @@ function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
               disabled={isLoading}
+              className="h-11 rounded-xl bg-background/70"
             />
           </div>
         </CardContent>
-        <CardFooter className="flex flex-col gap-4">
-          <Button type="submit" className="w-full" disabled={isLoading}>
+        <CardFooter className="flex flex-col gap-4 border-0 bg-transparent p-6 pt-2">
+          <Button type="submit" className="h-11 w-full rounded-xl shadow-lg shadow-primary/20" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2Icon className="size-4 animate-spin" />

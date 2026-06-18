@@ -59,13 +59,13 @@ export default function RegisterPage() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>注册</CardTitle>
-        <CardDescription>创建您的 FoodLens 账号</CardDescription>
+    <Card className="border-white/60 bg-card/85 shadow-2xl shadow-emerald-950/10 backdrop-blur-xl dark:border-white/10">
+      <CardHeader className="p-6 text-center">
+        <CardTitle className="text-2xl font-semibold">创建账号</CardTitle>
+        <CardDescription>开始记录和比较你的食品健康选择</CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 px-6">
           <div className="space-y-2">
             <Label htmlFor="email">邮箱</Label>
             <Input
@@ -76,6 +76,7 @@ export default function RegisterPage() {
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
               disabled={isLoading}
+              className="h-11 rounded-xl bg-background/70"
             />
           </div>
           <div className="space-y-2">
@@ -88,6 +89,7 @@ export default function RegisterPage() {
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="new-password"
               disabled={isLoading}
+              className="h-11 rounded-xl bg-background/70"
             />
           </div>
           <div className="space-y-2">
@@ -100,11 +102,12 @@ export default function RegisterPage() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               autoComplete="new-password"
               disabled={isLoading}
+              className="h-11 rounded-xl bg-background/70"
             />
           </div>
         </CardContent>
-        <CardFooter className="flex flex-col gap-4">
-          <Button type="submit" className="w-full" disabled={isLoading}>
+        <CardFooter className="flex flex-col gap-4 border-0 bg-transparent p-6 pt-2">
+          <Button type="submit" className="h-11 w-full rounded-xl shadow-lg shadow-primary/20" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2Icon className="size-4 animate-spin" />

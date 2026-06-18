@@ -134,11 +134,11 @@ export function CameraCapture({
 
       {preview ? (
         <div className="relative space-y-3">
-          <div className="relative overflow-hidden rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/30">
+          <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-muted/30 shadow-inner">
             <img
               src={preview}
               alt="预览"
-              className="w-full object-contain max-h-64"
+              className="max-h-80 w-full object-contain"
             />
           </div>
           <div className="flex gap-2">
@@ -148,6 +148,7 @@ export function CameraCapture({
               size="sm"
               onClick={handleRetake}
               disabled={disabled || isProcessing}
+              className="rounded-full"
             >
               <CameraIcon className="size-4" />
               重新拍照
@@ -158,6 +159,7 @@ export function CameraCapture({
               size="sm"
               onClick={handleReset}
               disabled={disabled}
+              className="rounded-full"
             >
               <XIcon className="size-4" />
               清除
@@ -194,22 +196,24 @@ export function CameraCapture({
           }}
           aria-disabled={disabled || isProcessing}
           className={cn(
-            "flex w-full flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-muted-foreground/30 bg-muted/20 px-6 py-12 transition-colors cursor-pointer",
-            "hover:border-muted-foreground/50 hover:bg-muted/30",
+            "flex w-full cursor-pointer flex-col items-center justify-center gap-4 rounded-[1.5rem] border border-dashed border-primary/30 bg-gradient-to-br from-primary/10 via-background/80 to-accent/20 px-6 py-14 text-center transition-all",
+            "hover:-translate-y-0.5 hover:border-primary/50 hover:bg-primary/10 hover:shadow-lg hover:shadow-primary/10",
             "disabled:pointer-events-none disabled:opacity-50",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           )}
         >
-          {isMobile ? (
-            <CameraIcon className="size-12 text-muted-foreground" />
-          ) : (
-            <UploadIcon className="size-12 text-muted-foreground" />
-          )}
+          <div className="flex size-16 items-center justify-center rounded-3xl bg-primary text-primary-foreground shadow-lg shadow-primary/25">
+            {isMobile ? (
+              <CameraIcon className="size-8" />
+            ) : (
+              <UploadIcon className="size-8" />
+            )}
+          </div>
           <div className="text-center">
-            <p className="text-sm font-medium text-foreground">
+            <p className="text-base font-semibold text-foreground">
               {isMobile ? "点击拍照" : "点击或拖拽上传图片"}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="mt-1 text-sm text-muted-foreground">
               {isMobile ? "拍摄配料表或营养成分表" : "支持 JPG、PNG 等格式"}
             </p>
           </div>

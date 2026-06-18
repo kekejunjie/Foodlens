@@ -12,9 +12,10 @@ export default async function MainLayout({
   } = await supabase.auth.getUser();
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen overflow-hidden">
+      <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-72 bg-gradient-to-b from-primary/15 via-accent/10 to-transparent" />
       <NavBar user={user ? { email: user.email ?? "" } : null} />
-      <main className="max-w-4xl mx-auto px-4 pt-6 md:pt-14 pb-20 md:pb-6">
+      <main className="mx-auto w-full max-w-6xl px-4 pb-24 pt-6 md:px-6 md:pb-10 md:pt-24">
         {children}
       </main>
     </div>

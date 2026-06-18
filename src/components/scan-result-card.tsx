@@ -43,14 +43,14 @@ function NutritionBar({
   const isMedium = percentage > 50 && percentage <= 80;
 
   return (
-    <div className="space-y-1">
+    <div className="rounded-2xl border bg-background/70 p-3">
       <div className="flex justify-between text-xs">
         <span className="text-muted-foreground">{label}</span>
         <span className="font-medium">
           {value} {unit}
         </span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-muted">
+      <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
         <div
           className={cn(
             "h-full rounded-full transition-all",
@@ -77,15 +77,18 @@ export function ScanResultCard({ result }: ScanResultCardProps) {
   const highRiskSet = new Set(result.highRiskAdditives ?? []);
 
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="pb-3">
+    <Card className="overflow-hidden border-white/60 bg-card/85 shadow-2xl shadow-emerald-950/10 backdrop-blur-xl dark:border-white/10">
+      <CardHeader className="bg-gradient-to-br from-primary/10 via-transparent to-accent/20 p-6 pb-5">
         <div className="flex items-start gap-4">
           <HealthScoreBadge score={result.healthScore} size="lg" />
           <div className="min-w-0 flex-1">
-            <CardTitle className="text-lg">
+            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+              健康评分
+            </p>
+            <CardTitle className="text-2xl font-semibold">
               {result.productName}
               {result.brand && (
-                <span className="ml-2 font-normal text-muted-foreground">
+                <span className="ml-2 text-base font-normal text-muted-foreground">
                   {result.brand}
                 </span>
               )}
@@ -104,13 +107,13 @@ export function ScanResultCard({ result }: ScanResultCardProps) {
         )}
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-5 p-6">
         {nutritionEntries.length > 0 && (
           <>
             <Separator />
             <div>
-              <h4 className="mb-3 text-sm font-medium">营养成分</h4>
-              <div className="space-y-3">
+              <h4 className="mb-3 text-sm font-semibold">营养成分</h4>
+              <div className="grid gap-3 md:grid-cols-2">
                 {nutritionEntries.map(({ key, value }) => {
                   const config = NUTRITION_LABELS[key];
                   if (!config) return null;
@@ -133,13 +136,13 @@ export function ScanResultCard({ result }: ScanResultCardProps) {
           <>
             <Separator />
             <div>
-              <h4 className="mb-2 text-sm font-medium">食品添加剂</h4>
-              <div className="flex flex-wrap gap-1.5">
+              <h4 className="mb-3 text-sm font-semibold">食品添加剂</h4>
+              <div className="flex flex-wrap gap-2">
                 {result.additives.map((additive) => (
                   <Badge
                     key={additive}
                     variant={highRiskSet.has(additive) ? "destructive" : "secondary"}
-                    className="text-xs"
+                    className="rounded-full px-3 py-1 text-xs"
                   >
                     {additive}
                   </Badge>
@@ -152,8 +155,8 @@ export function ScanResultCard({ result }: ScanResultCardProps) {
         {result.allergens && result.allergens.length > 0 && (
           <>
             <Separator />
-            <div className="rounded-lg border border-amber-500/50 bg-amber-500/10 p-3">
-              <h4 className="mb-1.5 text-sm font-medium text-amber-800 dark:text-amber-200">
+            <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4">
+              <h4 className="mb-1.5 text-sm font-semibold text-amber-800 dark:text-amber-200">
                 过敏原提示
               </h4>
               <p className="text-sm text-amber-700 dark:text-amber-300">

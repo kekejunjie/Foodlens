@@ -4,16 +4,16 @@ type HealthScore = "A" | "B" | "C" | "D";
 type BadgeSize = "sm" | "md" | "lg";
 
 const scoreColors: Record<HealthScore, string> = {
-  A: "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
-  B: "bg-teal-500/20 text-teal-600 dark:text-teal-400 border-teal-500/30",
-  C: "bg-amber-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30",
-  D: "bg-red-500/20 text-red-600 dark:text-red-400 border-red-500/30",
+  A: "bg-emerald-500/15 text-emerald-700 shadow-emerald-500/10 dark:text-emerald-300 border-emerald-500/25",
+  B: "bg-teal-500/15 text-teal-700 shadow-teal-500/10 dark:text-teal-300 border-teal-500/25",
+  C: "bg-amber-500/15 text-amber-700 shadow-amber-500/10 dark:text-amber-300 border-amber-500/25",
+  D: "bg-red-500/15 text-red-700 shadow-red-500/10 dark:text-red-300 border-red-500/25",
 };
 
 const sizeClasses: Record<BadgeSize, string> = {
-  sm: "text-xs px-1.5 py-0",
-  md: "text-sm px-2 py-0.5",
-  lg: "text-base px-2.5 py-1",
+  sm: "size-7 text-xs",
+  md: "size-9 text-sm",
+  lg: "size-16 text-2xl",
 };
 
 interface HealthScoreBadgeProps {
@@ -26,7 +26,7 @@ export function HealthScoreBadge({ score, size = "md", className }: HealthScoreB
   return (
     <span
       className={cn(
-        "inline-flex items-center justify-center rounded-md border font-semibold",
+        "inline-flex shrink-0 items-center justify-center rounded-2xl border font-bold shadow-lg",
         scoreColors[score],
         sizeClasses[size],
         className

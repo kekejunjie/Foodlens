@@ -38,16 +38,16 @@ export function HistoryCard({ scan }: HistoryCardProps) {
   const score = scan.healthScore as "A" | "B" | "C" | "D";
 
   return (
-    <Card className="overflow-hidden transition-shadow hover:shadow-md">
+    <Card className="overflow-hidden border-white/60 bg-card/85 shadow-lg shadow-emerald-950/5 transition-all hover:-translate-y-0.5 hover:shadow-xl dark:border-white/10">
       <button
         type="button"
         className="w-full text-left"
         onClick={() => setExpanded(!expanded)}
       >
-        <CardHeader className="flex flex-row items-start gap-3 pb-2">
+        <CardHeader className="flex flex-row items-start gap-4 p-4">
           <HealthScoreBadge score={score} size="md" className="shrink-0" />
           <div className="min-w-0 flex-1">
-            <CardTitle className="text-base font-medium truncate">
+            <CardTitle className="truncate text-base font-semibold">
               {displayName}
             </CardTitle>
             {scan.summary && (
@@ -59,7 +59,7 @@ export function HistoryCard({ scan }: HistoryCardProps) {
               {formatRelativeTime(scan.createdAt)}
             </p>
           </div>
-          <div className="shrink-0">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted">
             {expanded ? (
               <ChevronUpIcon className="size-4 text-muted-foreground" />
             ) : (
@@ -70,15 +70,22 @@ export function HistoryCard({ scan }: HistoryCardProps) {
       </button>
 
       {expanded && (
-        <CardContent className="border-t pt-4 space-y-4">
+        <CardContent className="space-y-4 border-t bg-background/45 p-4">
           <div>
             <h4 className="text-sm font-medium mb-2">营养成分 (每100g)</h4>
-            <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
-              <span>热量: {formatNutrition(scan.calories, "kcal")}</span>
-              <span>蛋白质: {formatNutrition(scan.protein, "g")}</span>
-              <span>脂肪: {formatNutrition(scan.fat, "g")}</span>
-              <span>糖: {formatNutrition(scan.sugar, "g")}</span>
-              <span>钠: {formatNutrition(scan.sodium, "mg")}</span>
+            <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground md:grid-cols-5">
+              {[
+                ["热量", formatNutrition(scan.calories, "kcal")],
+                ["蛋白质", formatNutrition(scan.protein, "g")],
+                ["脂肪", formatNutrition(scan.fat, "g")],
+                ["糖", formatNutrition(scan.sugar, "g")],
+                ["钠", formatNutrition(scan.sodium, "mg")],
+              ].map(([label, value]) => (
+                <span key={label} className="rounded-xl bg-card/80 p-3">
+                  <span className="block text-xs text-muted-foreground">{label}</span>
+                  <span className="mt-1 block font-medium text-foreground">{value}</span>
+                </span>
+              ))}
             </div>
           </div>
 

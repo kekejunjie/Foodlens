@@ -1,33 +1,48 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { CameraIcon, HistoryIcon, LeafIcon, TrophyIcon } from "lucide-react";
 import { UserDropdown } from "@/components/user-dropdown";
+import { cn } from "@/lib/utils";
 
 interface NavBarProps {
   user: { email: string } | null;
 }
 
 const navLinks = [
-  { href: "/scan", label: "扫描", icon: "📷" },
-  { href: "/history", label: "历史", icon: "📋" },
-  { href: "/ranking", label: "排行", icon: "🏆" },
+  { href: "/scan", label: "扫描", Icon: CameraIcon },
+  { href: "/history", label: "历史", Icon: HistoryIcon },
+  { href: "/ranking", label: "排行", Icon: TrophyIcon },
 ] as const;
 
 export function NavBar({ user }: NavBarProps) {
+  const pathname = usePathname();
+
   return (
     <>
-      {/* Desktop nav - hidden on mobile */}
-      <header className="hidden md:flex fixed top-0 left-0 right-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex h-14 w-full max-w-4xl mx-auto px-4 items-center justify-between">
-          <Link href="/" className="font-semibold text-lg">
-            FoodLens
+      <header className="fixed left-0 right-0 top-0 z-50 hidden px-4 pt-4 md:block">
+        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between rounded-2xl border border-white/60 bg-card/80 px-4 shadow-lg shadow-emerald-950/5 backdrop-blur-xl dark:border-white/10">
+          <Link href="/" className="flex items-center gap-2 font-semibold">
+            <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/30">
+              <LeafIcon className="size-5" />
+            </span>
+            <span className="text-lg tracking-tight">FoodLens</span>
           </Link>
-          <nav className="flex items-center gap-6">
-            {navLinks.map((link) => (
+          <nav className="flex items-center gap-1 rounded-full bg-muted/70 p-1">
+            {navLinks.map(({ href, label, Icon }) => (
               <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                key={href}
+                href={href}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-all",
+                  pathname === href
+                    ? "bg-card text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
               >
-                {link.label}
+                <Icon className="size-4" />
+                {label}
               </Link>
             ))}
           </nav>
@@ -35,7 +50,7 @@ export function NavBar({ user }: NavBarProps) {
             {user ? (
               <UserDropdown email={user.email} />
             ) : (
-              <Link href="/login" className="inline-flex items-center justify-center rounded-lg bg-primary px-2.5 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+              <Link href="/login" className="inline-flex h-9 items-center justify-center rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/25 transition-colors hover:bg-primary/90">
                 登录
               </Link>
             )}
@@ -43,17 +58,21 @@ export function NavBar({ user }: NavBarProps) {
         </div>
       </header>
 
-      {/* Mobile bottom tab bar - visible only on mobile */}
-      <nav className="flex md:hidden fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex h-16 w-full items-center justify-around px-2">
-          {navLinks.map((link) => (
+      <nav className="fixed bottom-0 left-0 right-0 z-50 flex border-t border-white/60 bg-card/90 shadow-[0_-16px_40px_rgba(15,118,110,0.08)] backdrop-blur-xl md:hidden dark:border-white/10">
+        <div className="flex h-20 w-full items-center justify-around px-2 pb-2">
+          {navLinks.map(({ href, label, Icon }) => (
             <Link
-              key={link.href}
-              href={link.href}
-              className="flex flex-col items-center justify-center gap-0.5 flex-1 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+              key={href}
+              href={href}
+              className={cn(
+                "flex flex-1 flex-col items-center justify-center gap-1 rounded-2xl py-2 text-xs font-medium transition-all",
+                pathname === href
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
             >
-              <span className="text-xl">{link.icon}</span>
-              <span>{link.label}</span>
+              <Icon className="size-5" />
+              <span>{label}</span>
             </Link>
           ))}
         </div>
